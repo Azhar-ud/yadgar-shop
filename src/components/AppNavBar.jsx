@@ -26,57 +26,109 @@ const AppNavbar = () => {
   const handleClose = () => setShowCart(false);
   const handleShow = () => setShowCart(true);
 
+  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+
   return (
     <>
-      <Navbar bg="light" expand="lg" className="shadow-sm px-3 sticky-top">
-        <Container>
-          {/* Brand */}
-          <Navbar.Brand className="fw-bold" href="/">
+      {/* Large Screen Navbar */}
+      <Navbar
+        bg="light"
+        expand="lg"
+        className="shadow-sm px-3 sticky-top d-none d-lg-flex"
+      >
+        <Container className="d-flex align-items-center justify-content-between">
+          {/* Brand Left */}
+          <Navbar.Brand href="/" className="fw-bold">
             Yadgaar Shop
           </Navbar.Brand>
 
-          {/* Hamburger Toggle */}
-          <Navbar.Toggle aria-controls="main-navbar" />
+          {/* Center Links */}
+          <Nav className="mx-auto">
+            <Nav.Link href="/explore">Explore</Nav.Link>
+            <Nav.Link href="/ac">AC</Nav.Link>
+            <Nav.Link href="/dc">DC</Nav.Link>
+          </Nav>
 
-          {/* Collapsible Menu */}
-          <Navbar.Collapse id="main-navbar">
-            {/* Center Links */}
-            <Nav className="mx-auto">
-              <Nav.Link href="/explore">Explore</Nav.Link>
-              <Nav.Link href="/ac">AC</Nav.Link>
-              <Nav.Link href="/dc">DC</Nav.Link>
-            </Nav>
-            <div
-              className="position-relative"
-              style={{ display: "inline-block" }}
-            >
-              {/* Cart count div */}
-              {cart.length > 0 && (
-                <div
-                  className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                  style={{
-                    position: "absolute",
-                    top: "-8px", // adjust to move up
-                    right: "-10px", // adjust to move right
-                    width: "18px",
-                    height: "18px",
-                    fontSize: "12px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {cart.length}
-                </div>
-              )}
-
-              {/* Cart Icon */}
-              <FaShoppingCart
-                size={22}
-                style={{ cursor: "pointer" }}
-                onClick={handleShow}
-              />
-            </div>
-          </Navbar.Collapse>
+          {/* Cart Right */}
+          <div className="position-relative">
+            {cart.length > 0 && (
+              <div
+                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-10px",
+                  width: "18px",
+                  height: "18px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {cart.length}
+              </div>
+            )}
+            <FaShoppingCart
+              size={22}
+              style={{ cursor: "pointer" }}
+              onClick={handleShow}
+            />
+          </div>
         </Container>
+      </Navbar>
+
+      {/* Mobile Navbar */}
+      <Navbar
+        bg="light"
+        expand="lg"
+        className="shadow-sm px-3 sticky-top d-flex d-lg-none"
+      >
+        <Container className="d-flex align-items-center justify-content-between position-relative">
+          {/* Hamburger Left */}
+          <Navbar.Toggle aria-controls="mobile-navbar" className="me-2" />
+
+          {/* Brand Center */}
+          <Navbar.Brand
+            href="/"
+            className="fw-bold position-absolute start-50 translate-middle-x"
+            style={{ zIndex: 1 }}
+          >
+            Yadgaar Shop
+          </Navbar.Brand>
+
+          {/* Cart Right */}
+          <div className="position-relative">
+            {cart.length > 0 && (
+              <div
+                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-10px",
+                  width: "18px",
+                  height: "18px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {cart.length}
+              </div>
+            )}
+            <FaShoppingCart
+              size={22}
+              style={{ cursor: "pointer" }}
+              onClick={handleShow}
+            />
+          </div>
+        </Container>
+
+        {/* Collapsible Links  */}
+        <Navbar.Collapse id="mobile-navbar" className="mt-2">
+          <Nav className="flex-column px-3">
+            <Nav.Link href="/explore">Explore</Nav.Link>
+            <Nav.Link href="/ac">AC</Nav.Link>
+            <Nav.Link href="/dc">DC</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
 
       {/* Cart Sidebar */}
@@ -93,7 +145,6 @@ const AppNavbar = () => {
                     key={item.id}
                     className="d-flex justify-content-between align-items-center"
                   >
-                    {/* Left side: Image + details */}
                     <div className="d-flex align-items-center">
                       {item.image_url && (
                         <img
@@ -119,7 +170,6 @@ const AppNavbar = () => {
                       </div>
                     </div>
 
-                    {/* Right side: Delete button */}
                     <Button
                       variant="outline-danger"
                       size="sm"
@@ -134,12 +184,7 @@ const AppNavbar = () => {
               {/* Total Price */}
               <div className="d-flex justify-content-between align-items-center mt-3">
                 <strong>Total:</strong>
-                <span>
-                  ₨
-                  {cart
-                    .reduce((sum, item) => sum + item.price, 0)
-                    .toLocaleString()}
-                </span>
+                <span>₨{cartTotal.toLocaleString()}</span>
               </div>
 
               {/* WhatsApp Order Button */}
@@ -158,10 +203,7 @@ const AppNavbar = () => {
                             item.price / item.quantity
                           }) = ₨${item.price}`
                       )
-                      .join("\n")}\n\nTotal: ₨${cart.reduce(
-                      (sum, item) => sum + item.price,
-                      0
-                    )}`
+                      .join("\n")}\n\nTotal: ₨${cartTotal}`
                   )}`}
                 >
                   Send Order on WhatsApp
